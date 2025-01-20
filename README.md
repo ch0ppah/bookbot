@@ -1,2 +1,2 @@
 # bookbot
-first guided project in boot.dev backend career path
+BookBot is my first project!
