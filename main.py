@@ -1,43 +1,42 @@
+import sys
+
+from stats import (
+    get_num_words,
+    chars_dict_to_sorted_list,
+    get_chars_dict,
+)
+
+
 def main():
-        write_report(count_words(), count_chars())
+    if len(sys.argv) < 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
 
-def sort_on(dict):
-    return dict["num"]
+    book_path = sys.argv[1]
+    text = get_book_text(book_path)
+    num_words = get_num_words(text)
+    chars_dict = get_chars_dict(text)
+    chars_sorted_list = chars_dict_to_sorted_list(chars_dict)
+    print_report(book_path, num_words, chars_sorted_list)
 
-def count_words():
-    with open("books/frankenstein.txt") as f:
-        file_contents = f.read()
-        word_count = len(file_contents.split())
-        return word_count
 
-def count_chars():
-    chars = []
+def get_book_text(path):
+    with open(path) as f:
+        return f.read()
 
-    with open("books/frankenstein.txt") as f:
-        file_contents = f.read().lower()
-        
-        for char in file_contents:
-            found = False
-            if char.isalpha():
-                for dict in chars:
-                    if dict["char"] == char:
-                        dict["num"] += 1
-                        found = True
-                        break
-                
-                if not found:
-                    chars.append({"char": char, "num": 1})
-    
-    chars.sort(reverse=True, key=sort_on)
-    return chars
 
-def write_report(word_count, char_list):
-    print("--- Begin report of books/frankenstein.txt ---")
-    print(f"{word_count} words found in the document")
-    print()
+def print_report(book_path, num_words, chars_sorted_list):
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {book_path}...")
+    print("----------- Word Count ----------")
+    print(f"Found {num_words} total words")
+    print("--------- Character Count -------")
+    for item in chars_sorted_list:
+        if not item["char"].isalpha():
+            continue
+        print(f"{item['char']}: {item['num']}")
 
-    for char_dict in char_list:
-        print(f"The '{char_dict["char"]}' character was found {char_dict["num"]} times")
+    print("============= END ===============")
 
-    print("--- End report ---")
+
 main()
